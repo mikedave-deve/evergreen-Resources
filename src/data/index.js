@@ -115,7 +115,7 @@ export const services = [
   {
     id: 'direct-placement',
     title: 'Direct Placement',
-    icon: '🌿',
+    icon: '',
     shortDesc: 'Permanent hires aligned with your long-term team vision.',
     description:
       'Our direct placement service identifies, vets, and presents qualified environmental professionals for permanent roles - from entry-level technicians to senior executives. We handle the search so you can focus on your mission.',
@@ -130,7 +130,7 @@ export const services = [
   {
     id: 'contract-staffing',
     title: 'Contract Staffing',
-    icon: '🌲',
+    icon: '',
     shortDesc: 'Flexible talent for project-based or seasonal needs.',
     description:
       'Scale your workforce precisely when you need it. Our contract staffing solutions provide experienced environmental professionals for short-term projects, seasonal peaks, and specialized engagements.',
@@ -145,7 +145,7 @@ export const services = [
   {
     id: 'executive-search',
     title: 'Executive Search',
-    icon: '🦅',
+    icon: '',
     shortDesc: 'Retained search for director, VP, and C-suite roles.',
     description:
       'Leadership in the environmental sector requires rare combinations of technical mastery and business acumen. Our retained executive search practice uncovers candidates who are not on job boards.',
@@ -160,7 +160,7 @@ export const services = [
   {
     id: 'consulting',
     title: 'Workforce Consulting',
-    icon: '📊',
+    icon: '',
     shortDesc: 'Strategic hiring, compensation, and team structure analysis.',
     description:
       'Beyond individual hires - we help organizations design hiring systems, understand compensation trends, and build employer brand strategies to attract top environmental talent.',
