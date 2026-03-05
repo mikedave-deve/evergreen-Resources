@@ -58,8 +58,8 @@ export default function Footer() {
             </p>
             <div className="space-y-2 text-sm text-cream-300">
               <div className="flex items-center gap-2"><MapPin size={14} className="text-gold-500 shrink-0" /><span>1200 Forest Way, Suite 400, Austin TX 78701</span></div>
-              <div className="flex items-center gap-2"><Phone size={14} className="text-gold-500 shrink-0" /><span>(512) 555-0190</span></div>
-              <div className="flex items-center gap-2"><Mail size={14} className="text-gold-500 shrink-0" /><span>hello@evergreenresources.com</span></div>
+              <div className="flex items-center gap-2"><Phone size={14} className="text-gold-500 shrink-0" /><span>(712) 326-6711</span></div>
+              <div className="flex items-center gap-2"><Mail size={14} className="text-gold-500 shrink-0" /><span>info@evergreenresources.org</span></div>
             </div>
           </div>
 

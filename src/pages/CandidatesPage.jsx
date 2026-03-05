@@ -175,7 +175,7 @@ function CTASection() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/jobs"    className="btn-primary bg-forest-400 hover:bg-forest-300 text-forest-950">Browse Current Openings</Link>
-          <Link to="/contact" className="inline-flex items-center gap-2 border-2 border-cream-200/30
+          <Link to="/submit-resume" className="inline-flex items-center gap-2 border-2 border-cream-200/30
                                           text-cream-100 hover:border-cream-200/60 hover:bg-white/5
                                           font-body font-medium px-6 py-3 rounded-sm transition-all">
             Submit Your Resume

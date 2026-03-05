@@ -12,9 +12,10 @@ const navLinks = [
   {
     label: 'Work With Us',
     children: [
-      { to: '/employers',  label: 'Employers'  },
-      { to: '/candidates', label: 'Candidates' },
-      { to: '/jobs',       label: 'Job Board'  },
+      { to: '/employers',      label: 'For Employers'  },
+      { to: '/candidates',     label: 'For Candidates' },
+      { to: '/jobs',           label: 'Job Board'      },
+      { to: '/submit-resume',  label: 'Submit Resume'  },
     ],
   },
   { to: '/contact', label: 'Contact' },
@@ -135,19 +136,21 @@ export default function Navbar() {
           })}
         </ul>
 
-        {/* Desktop CTA */}
-        <div className="hidden lg:flex items-center gap-3">
+        {/* Desktop CTAs */}
+        <div className="hidden lg:flex items-center gap-2">
           <Link
-            to="/jobs"
+            to="/submit-resume"
             className={cn(
-              'text-sm font-medium font-body transition-colors',
-              scrolled || !isHero ? 'text-forest-700 hover:text-forest-500' : 'text-white/80 hover:text-white'
+              'text-sm font-medium font-body px-4 py-2 rounded-sm transition-all duration-200',
+              scrolled || !isHero
+                ? 'text-forest-700 border border-forest-200 hover:bg-forest-50'
+                : 'text-white/80 border border-white/20 hover:bg-white/10'
             )}
           >
-            Find Jobs
+            Submit Resume
           </Link>
           <Link to="/contact" className="btn-primary text-sm py-2 px-5">
-            Hire Talent
+            Find Talent
           </Link>
         </div>
 
@@ -155,7 +158,7 @@ export default function Navbar() {
         <Sheet>
           <SheetTrigger asChild>
             <button className={cn(
-              'lg:hidden p-2 rounded-sm transition-colors',
+              'lg:hidden p-2 rounded-sm transition-colors touch-manipulation',
               scrolled || !isHero ? 'text-forest-800 hover:bg-forest-50' : 'text-white hover:bg-white/10'
             )}>
               <Menu className="w-5 h-5" />
@@ -186,7 +189,7 @@ export default function Navbar() {
                             key={child.to}
                             to={child.to}
                             className={({ isActive }) => cn(
-                              'flex items-center py-2.5 pl-4 text-sm font-body border-l-2 transition-colors',
+                              'flex items-center py-2.5 pl-4 text-sm font-body border-l-2 transition-colors touch-manipulation',
                               isActive
                                 ? 'border-forest-500 text-forest-700 font-medium'
                                 : 'border-forest-100 text-forest-700 hover:border-forest-400 hover:text-forest-600'
@@ -204,7 +207,7 @@ export default function Navbar() {
                         to={link.to}
                         end={link.to === '/'}
                         className={({ isActive }) => cn(
-                          'flex items-center py-2.5 text-sm font-body transition-colors rounded-sm px-2',
+                          'flex items-center py-2.5 text-sm font-body transition-colors rounded-sm px-2 touch-manipulation',
                           isActive
                             ? 'text-forest-700 font-medium bg-forest-50'
                             : 'text-forest-800 hover:text-forest-600 hover:bg-forest-50'
@@ -217,8 +220,8 @@ export default function Navbar() {
                 })}
               </ul>
               <div className="mt-6 pt-6 border-t border-forest-100 space-y-3">
-                <Link to="/jobs"    className="btn-outline w-full justify-center text-sm">Browse Jobs</Link>
-                <Link to="/contact" className="btn-primary w-full justify-center text-sm">Hire Talent</Link>
+                <Link to="/submit-resume" className="btn-outline w-full justify-center text-sm touch-manipulation">Submit Resume</Link>
+                <Link to="/contact"       className="btn-primary w-full justify-center text-sm touch-manipulation">Find Talent</Link>
               </div>
             </nav>
           </SheetContent>

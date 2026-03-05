@@ -98,13 +98,6 @@ export default function Navbar() {
               )
             )}
             <Link
-              to="/submit-resume"
-              className="ml-4 bg-gold-500 text-forest-950 px-5 py-2 text-sm font-body font-600 hover:bg-gold-400 transition-colors"
-            >
-             Submit Your Resume
-            </Link>
-
-            <Link
               to="/jobs"
               className="ml-4 bg-gold-500 text-forest-950 px-5 py-2 text-sm font-body font-600 hover:bg-gold-400 transition-colors"
             >
@@ -114,7 +107,7 @@ export default function Navbar() {
 
           {/* Mobile Hamburger */}
           <button
-            className="md:hidden text-cream-100 p-2"
+            className="md:hidden text-cream-100 p-2 touch-manipulation"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -129,7 +122,7 @@ export default function Navbar() {
               link.children ? (
                 <div key={link.label}>
                   <button
-                    className="flex items-center justify-between w-full px-2 py-2 text-sm text-cream-200 hover:text-gold-400"
+                    className="flex items-center justify-between w-full px-2 py-2 text-sm text-cream-200 hover:text-gold-400 touch-manipulation"
                     onClick={() => setDropdownOpen(dropdownOpen === link.label ? null : link.label)}
                   >
                     {link.label}
@@ -138,7 +131,7 @@ export default function Navbar() {
                   {dropdownOpen === link.label && (
                     <div className="pl-4 space-y-1">
                       {link.children.map((child) => (
-                        <Link key={child.href} to={child.href} className="block py-2 text-sm text-cream-300 hover:text-gold-400">
+                        <Link key={child.href} to={child.href} className="block py-2.5 text-sm text-cream-300 hover:text-gold-400 touch-manipulation">
                           {child.label}
                         </Link>
                       ))}
@@ -146,22 +139,19 @@ export default function Navbar() {
                   )}
                 </div>
               ) : (
-                <Link key={link.href} to={link.href} className="block px-2 py-2 text-sm text-cream-200 hover:text-gold-400">
+                <Link key={link.href} to={link.href} className="block px-2 py-2.5 text-sm text-cream-200 hover:text-gold-400 touch-manipulation">
                   {link.label}
                 </Link>
               )
             )}
-            <div className="pt-3">
-              <Link to="/jobs" className="block text-center bg-gold-500 text-forest-950 px-5 py-3 text-sm font-600 hover:bg-gold-400 transition-colors">
+            <div className="pt-3 space-y-2">
+              <Link to="/submit-resume" className="block text-center bg-gold-500 text-forest-950 px-5 py-3 text-sm font-body font-semibold hover:bg-gold-400 transition-colors touch-manipulation">
                 Submit Your Resume
               </Link>
-            </div>
-             <div className="pt-3">
-              <Link to="/jobs" className="block text-center bg-gold-500 text-forest-950 px-5 py-3 text-sm font-600 hover:bg-gold-400 transition-colors">
+              <Link to="/jobs" className="block text-center bg-gold-500 text-forest-950 px-5 py-3 text-sm font-body font-semibold hover:bg-gold-400 transition-colors touch-manipulation">
                 Find Talent
               </Link>
             </div>
-            
           </div>
         )}
       </div>

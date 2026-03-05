@@ -97,19 +97,19 @@ function Hero() {
 
         {/* CTAs */}
         <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link to="/jobs"
+          <Link to="/submit-resume"
                 className="inline-flex items-center gap-2 bg-forest-500 hover:bg-forest-400
                            text-white font-body font-medium px-8 py-4 rounded-sm
                            transition-all duration-300 hover:shadow-xl hover:shadow-forest-500/30
                            active:scale-95">
-            Browse Open Roles
+           Submit Your Resume
             <ArrowRight className="w-4 h-4" />
           </Link>
-          <Link to="/employers"
+          <Link to="/jobs"
                 className="inline-flex items-center gap-2 border border-cream-200/30 text-cream-100
                            hover:border-cream-200/60 hover:bg-white/5
                            font-body font-medium px-8 py-4 rounded-sm transition-all duration-300">
-            Hire Environmental Talent
+            Browse Open Roles
           </Link>
         </div>
 
