@@ -98,7 +98,7 @@ export default function Navbar() {
               )
             )}
             <Link
-              to="/jobs"
+              to="/submit-resume"
               className="ml-4 bg-gold-500 text-forest-950 px-5 py-2 text-sm font-body font-600 hover:bg-gold-400 transition-colors"
             >
              Submit Your Resume

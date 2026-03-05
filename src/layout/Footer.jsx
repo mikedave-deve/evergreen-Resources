@@ -50,12 +50,12 @@ export default function Footer() {
               <a href="mailto:hello@evergreenresources.com"
                  className="flex items-center gap-2.5 text-cream-300/60 hover:text-forest-400 transition-colors">
                 <Mail className="w-4 h-4" />
-                hello@evergreenresources.com
+                info@evergreenresources.com
               </a>
               <a href="tel:+15035550192"
                  className="flex items-center gap-2.5 text-cream-300/60 hover:text-forest-400 transition-colors">
                 <Phone className="w-4 h-4" />
-                (503) 555-0192
+                (712) 326-6711
               </a>
               <span className="flex items-center gap-2.5 text-cream-300/60">
                 <MapPin className="w-4 h-4" />

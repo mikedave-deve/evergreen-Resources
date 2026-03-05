@@ -205,7 +205,7 @@ function IndustriesPreview() {
             <div key={ind.id}
                  className={`reveal p-5 rounded-sm border ${ind.color}
                              hover:shadow-md transition-all duration-300 cursor-pointer group`}>
-              <div className="text-3xl mb-3">{ind.icon}</div>
+              <div className="">{ind.icon}</div>
               <h3 className="font-body text-lg font-semibold text-forest-900 mb-1.5 group-hover:text-forest-700 transition-colors">
                 {ind.title}
               </h3>

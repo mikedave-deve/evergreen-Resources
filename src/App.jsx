@@ -8,6 +8,8 @@ import JobsPage       from './pages/JobsPage'
 import EmployersPage  from './pages/EmployersPage'
 import CandidatesPage from './pages/CandidatesPage'
 import ContactPage    from './pages/ContactPage'
+import SubmitResumePage from './pages/SubmitResumePage'
+
 
 export default function App() {
   return (
@@ -22,6 +24,8 @@ export default function App() {
           <Route path="employers"  element={<EmployersPage />}  />
           <Route path="candidates" element={<CandidatesPage />} />
           <Route path="contact"    element={<ContactPage />}    />
+          <Route path="submit-resume" element={<SubmitResumePage />} />
+         
           <Route path="*" element={
             <div className="min-h-[60vh] flex items-center justify-center">
               <div className="text-center">

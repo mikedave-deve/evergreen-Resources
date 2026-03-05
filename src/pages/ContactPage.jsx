@@ -21,27 +21,47 @@ function PageHeader() {
 }
 
 function ContactForm() {
-  const [formData, setFormData] = useState({
-    firstName: '', lastName: '', email: '', phone: '',
-    inquiryType: '', company: '', message: '',
-  })
-  const [submitted, setSubmitted] = useState(false)
-  const [loading,   setLoading]   = useState(false)
+  const [submitted,    setSubmitted]    = useState(false)
+  const [loading,      setLoading]      = useState(false)
+  const [submitError,  setSubmitError]  = useState('')
 
-  function handleChange(e) {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+  const inputClass = [
+    'w-full px-4 py-3 text-sm font-body',
+    'border border-forest-200 rounded-sm',
+    'bg-forest-50 text-forest-900 placeholder-forest-400',
+    'focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent',
+    'transition-all duration-200',
+  ].join(' ')
 
-  function handleSubmit(e) {
+  const labelClass = 'block font-body text-xs font-medium text-forest-700 mb-1.5 tracking-wide'
+
+  async function handleSubmit(e) {
     e.preventDefault()
+    setSubmitError('')
     setLoading(true)
-    setTimeout(() => { setLoading(false); setSubmitted(true) }, 1200)
-  }
 
-  const inputClass = `w-full px-4 py-3 text-sm font-body border border-forest-200 rounded-sm
-                      bg-forest-50 text-forest-900 placeholder-forest-400
-                      focus:outline-none focus:ring-2 focus:ring-forest-400 focus:border-transparent
-                      transition-colors`
+    try {
+      const response = await fetch('https://formsubmit.co/ajax/info@evergreenresources.org', {
+        method: 'POST',
+        body:   new FormData(e.target),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success === 'true') {
+        setSubmitted(true)
+      } else {
+        setSubmitError(
+          data?.message ||
+          'Something went wrong. Please try again or email us directly.'
+        )
+      }
+    } catch {
+      setSubmitError('Network error. Please check your connection and try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   if (submitted) {
     return (
@@ -58,63 +78,82 @@ function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+      {/* FormSubmit configuration */}
+      <input type="hidden" name="_subject" value="New Contact Form Message" />
+      <input type="hidden" name="_captcha" value="false" />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block font-body text-xs font-medium text-forest-700 mb-1.5">First Name *</label>
-          <input required name="firstName" value={formData.firstName} onChange={handleChange}
+          <label htmlFor="firstName" className={labelClass}>First Name *</label>
+          <input id="firstName" required name="firstName" type="text"
                  className={inputClass} placeholder="Jane" />
         </div>
         <div>
-          <label className="block font-body text-xs font-medium text-forest-700 mb-1.5">Last Name *</label>
-          <input required name="lastName" value={formData.lastName} onChange={handleChange}
+          <label htmlFor="lastName" className={labelClass}>Last Name *</label>
+          <input id="lastName" required name="lastName" type="text"
                  className={inputClass} placeholder="Smith" />
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block font-body text-xs font-medium text-forest-700 mb-1.5">Email *</label>
-          <input required type="email" name="email" value={formData.email} onChange={handleChange}
+          <label htmlFor="email" className={labelClass}>Email *</label>
+          <input id="email" required type="email" name="email"
                  className={inputClass} placeholder="jane@company.com" />
         </div>
         <div>
-          <label className="block font-body text-xs font-medium text-forest-700 mb-1.5">Phone</label>
-          <input type="tel" name="phone" value={formData.phone} onChange={handleChange}
+          <label htmlFor="phone" className={labelClass}>Phone</label>
+          <input id="phone" type="tel" name="phone"
                  className={inputClass} placeholder="(503) 555-0100" />
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block font-body text-xs font-medium text-forest-700 mb-1.5">Inquiry Type *</label>
-          <select required name="inquiryType" value={formData.inquiryType} onChange={handleChange}
+          <label htmlFor="inquiryType" className={labelClass}>Inquiry Type *</label>
+          <select id="inquiryType" required name="inquiryType" defaultValue=""
                   className={inputClass}>
             <option value="" disabled>Select one...</option>
-            <option value="employer">I'm looking to hire</option>
-            <option value="candidate">I'm looking for a job</option>
+            <option value="employer">I am looking to hire</option>
+            <option value="candidate">I am looking for a job</option>
             <option value="consulting">Workforce consulting</option>
             <option value="other">Other</option>
           </select>
         </div>
         <div>
-          <label className="block font-body text-xs font-medium text-forest-700 mb-1.5">Company / Organization</label>
-          <input name="company" value={formData.company} onChange={handleChange}
+          <label htmlFor="company" className={labelClass}>Company / Organization</label>
+          <input id="company" name="company" type="text"
                  className={inputClass} placeholder="Acme Environmental" />
         </div>
       </div>
 
       <div>
-        <label className="block font-body text-xs font-medium text-forest-700 mb-1.5">Message *</label>
-        <textarea required name="message" value={formData.message} onChange={handleChange}
-                  rows={5} className={`${inputClass} resize-none`}
-                  placeholder="Tell us about your hiring needs, the role you're targeting, or any questions you have..." />
+        <label htmlFor="message" className={labelClass}>Message *</label>
+        <textarea id="message" required name="message" rows={5}
+                  className={`${inputClass} resize-none`}
+                  placeholder="Tell us about your hiring needs, the role you are targeting, or any questions you have..." />
       </div>
+
+      {submitError && (
+        <div className="flex items-start gap-2.5 p-4 bg-red-50 border border-red-200 rounded-sm">
+          <span className="text-red-500 text-sm shrink-0 mt-0.5">!</span>
+          <p className="font-body text-sm text-red-700">{submitError}</p>
+        </div>
+      )}
 
       <button type="submit"
               disabled={loading}
-              className="btn-primary w-full justify-center text-base py-3.5 disabled:opacity-60">
-        {loading ? 'Sending...' : 'Send Message'}
+              className="btn-primary w-full justify-center text-sm py-3.5 disabled:opacity-60 disabled:cursor-not-allowed">
+        {loading ? (
+          <>
+            <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+            </svg>
+            Sending...
+          </>
+        ) : 'Send Message'}
       </button>
 
       <p className="font-body text-xs text-center text-forest-400">
