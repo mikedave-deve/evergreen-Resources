@@ -208,7 +208,7 @@ export default function ResumeSubmissionForm() {
         For local dev:   http://localhost:5173/submit-resume?success=true
         For production:  https://yourdomain.com/submit-resume?success=true
       */}
-      <input type="hidden" name="_next" value="/submit-resume?success=true" />
+      <input type="hidden" name="_next" value="https://evergreenresources.org/submit-resume?success=true" />
 
       {/* Row 1: Name */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
