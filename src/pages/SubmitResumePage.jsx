@@ -31,8 +31,8 @@ const trustItems = [
   },
   {
     icon: <Clock className="w-4 h-4 text-forest-500" />,
-    title: '3–5 Day Review',
-    body: 'Every submission is personally reviewed by a specialist within 3–5 business days.',
+    title: '1-2 Day Review',
+    body: 'Every submission is personally reviewed by a specialist within 1-2 business days.',
   },
   {
     icon: <Users className="w-4 h-4 text-forest-500" />,

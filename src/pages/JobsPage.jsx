@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { Search, MapPin, Briefcase, Clock, ChevronRight, SlidersHorizontal } from 'lucide-react'
 import { jobs, jobCategories, jobTypes, jobLocations } from '../data'
 import Badge from '../components/ui/Badge'
@@ -70,15 +71,19 @@ function JobCard({ job }) {
             </span>
           ))}
         </div>
-        <div className="flex items-center justify-between w-full sm:w-auto gap-4">
-          <span className="font-body text-sm font-semibold text-forest-800">{job.salary}</span>
-          <button className="inline-flex items-center gap-1.5 text-xs font-medium font-body
-                             text-forest-600 hover:text-forest-800 transition-colors group/btn">
-            Apply Now
-            <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5" />
-          </button>
-        </div>
+       <Link to="/submit-resume" className="flex items-center justify-between w-full sm:w-auto gap-4">
+    <span className="font-body text-sm font-semibold text-forest-800">
+        {job.salary}
+    </span>
+
+    <span className="inline-flex items-center gap-1.5 text-xs font-medium font-body
+                     text-forest-600 hover:text-forest-800 transition-colors group/btn">
+        Apply Now
+        <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5" />
+    </span>
+</Link>
       </div>
+      
     </Card>
   )
 }

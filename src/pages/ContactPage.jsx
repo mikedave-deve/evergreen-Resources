@@ -105,7 +105,7 @@ function ContactForm() {
         <div>
           <label htmlFor="phone" className={labelClass}>Phone</label>
           <input id="phone" type="tel" name="phone"
-                 className={inputClass} placeholder="(503) 555-0100" />
+                 className={inputClass} placeholder="" />
         </div>
       </div>
 
@@ -166,9 +166,9 @@ function ContactForm() {
 function ContactSection() {
   const ref = useScrollReveal('.reveal')
   const offices = [
-    { city: 'Portland', state: 'OR', address: '1234 NW Glisan St, Suite 400', phone: '(503) 555-0192', primary: true },
-    { city: 'Seattle',  state: 'WA', address: '800 Fifth Ave, Suite 1010',    phone: '(206) 555-0147' },
-    { city: 'San Francisco', state: 'CA', address: '535 Mission St, Suite 1450', phone: '(415) 555-0188' },
+    { city: 'Portland', state: 'OR', address: '1234 NW Glisan St, Suite 400', primary: true },
+    { city: 'Seattle',  state: 'WA', address: '800 Fifth Ave, Suite 1010',   },
+    { city: 'San Francisco', state: 'CA', address: '535 Mission St, Suite 1450',  },
   ]
   return (
     <section className="section-wrapper bg-white" ref={ref}>
@@ -231,7 +231,7 @@ function ContactSection() {
               </div>
               <a href="mailto:hello@evergreenresources.com"
                  className="font-body text-xs text-forest-600 hover:text-forest-800 transition-colors">
-                hello@evergreenresources.com
+                info@evergreenresources.org
               </a>
             </div>
 
