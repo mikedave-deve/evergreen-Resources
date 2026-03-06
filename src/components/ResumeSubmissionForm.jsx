@@ -17,7 +17,6 @@ const industries = [
   'Engineering', 'Customer Support', 'Sales', 'Administration', 'Other',
 ]
 
-// Success State
 function SuccessMessage() {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -26,7 +25,7 @@ function SuccessMessage() {
           <CheckCircle2 className="w-10 h-10 text-forest-600" />
         </div>
         <div className="absolute -top-1 -right-1 w-6 h-6 bg-forest-500 rounded-full flex items-center justify-center animate-bounce">
-          <span className="text-white text-xs font-bold">checkmark</span>
+          <span className="text-white text-xs font-bold">✓</span>
         </div>
       </div>
       <h3 className="font-display text-2xl font-bold text-forest-900 mb-3">Resume Submitted</h3>
