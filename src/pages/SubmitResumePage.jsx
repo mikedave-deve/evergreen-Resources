@@ -48,7 +48,7 @@ const trustItems = [
 
 // ─── What Happens Next steps ──────────────────────────────────────────────
 const nextSteps = [
-  { n: '01', text: 'Our team reviews your resume within 3–5 business days.' },
+  { n: '01', text: 'Our team reviews your resume within 1-2 business days.' },
   { n: '02', text: 'If there is a match, a recruiter will contact you directly.' },
   { n: '03', text: 'We discuss your goals and the opportunity in more detail.' },
   { n: '04', text: 'We introduce you to the client only with your consent.' },
@@ -74,7 +74,7 @@ function SubmitSection() {
 
             {/* Form card — same container style as ContactPage */}
             <div className="bg-forest-50 border border-forest-100 rounded-sm p-7">
-              {/* ⚠️  Replace YOUR_FORM_ID inside ResumeSubmissionForm.jsx */}
+             
               <ResumeSubmissionForm />
             </div>
           </div>
