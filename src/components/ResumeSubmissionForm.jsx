@@ -71,14 +71,7 @@ function UploadZone({ file, onFileChange, error }) {
       e.preventDefault()
       setDragging(false)
       const dropped = e.dataTransfer.files[0]
-      if (!dropped) return
-      // ── FIX: sync dropped file into the real <input> so FormData captures it ──
-      try {
-        const dt = new DataTransfer()
-        dt.items.add(dropped)
-        inputRef.current.files = dt.files
-      } catch (_) {}
-      onFileChange(dropped)
+      if (dropped) onFileChange(dropped)
     },
     [onFileChange]
   )
