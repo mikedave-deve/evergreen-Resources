@@ -154,6 +154,8 @@ export default function ResumeSubmissionForm() {
   const [fileError, setFileError] = useState('')
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  // Tracks whether the iframe load is from an actual submission (not initial mount)
+  const isPendingSubmission = useRef(false)
 
   function handleFileChange(selectedFile) {
     setFileError('')
@@ -172,149 +174,164 @@ export default function ResumeSubmissionForm() {
     setFile(selectedFile)
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault()
-
+  function handleSubmit(e) {
     if (!file) {
+      e.preventDefault()
       setFileError('Please attach your resume before submitting.')
       return
     }
 
+    // Let the form submit naturally (multipart POST to iframe).
+    // This is the only reliable way to send file attachments via FormSubmit.
+    isPendingSubmission.current = true
     setLoading(true)
+  }
 
-    try {
-      const formData = new FormData(e.target)
-
-      const response = await fetch(
-        'https://formsubmit.co/ajax/info@evergreenresources.org',
-        {
-          method: 'POST',
-          body: formData,
-        }
-      )
-
-      const data = await response.json()
-
-      if (response.ok && data.success === 'true') {
-        setSubmitted(true)
-      } else {
-        setFileError('Submission failed. Please try again.')
-      }
-    } catch {
-      setFileError('Network error. Please try again.')
-    } finally {
-      setLoading(false)
-    }
+  // Fires when the hidden iframe finishes loading — i.e. FormSubmit responded.
+  function handleIframeLoad() {
+    if (!isPendingSubmission.current) return
+    isPendingSubmission.current = false
+    setLoading(false)
+    setSubmitted(true)
   }
 
   if (submitted) return <SuccessMessage />
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <input type="hidden" name="_subject" value="New Resume Submission" />
-      <input type="hidden" name="_captcha" value="false" />
+    <>
+      {/*
+        Hidden iframe that receives the FormSubmit redirect response.
+        The form targets it by name, keeping the user on the same page
+        while the real multipart/form-data POST (with the PDF attached)
+        goes through. This is why the AJAX endpoint was wrong — it strips files.
+      */}
+      <iframe
+        name="resume-submit-frame"
+        style={{ display: 'none' }}
+        onLoad={handleIframeLoad}
+        title="Form submission target"
+        aria-hidden="true"
+      />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className={labelClass}>First Name *</label>
-          <input
-            type="text"
-            name="firstName"
-            required
-            placeholder="Jane"
-            className={inputClass}
-          />
-        </div>
-
-        <div>
-          <label className={labelClass}>Last Name *</label>
-          <input
-            type="text"
-            name="lastName"
-            required
-            placeholder="Smith"
-            className={inputClass}
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className={labelClass}>Email Address *</label>
-          <input
-            type="email"
-            name="email"
-            required
-            placeholder="jane@example.com"
-            className={inputClass}
-          />
-        </div>
-
-        <div>
-          <label className={labelClass}>Phone Number</label>
-          <input
-            type="tel"
-            name="phone"
-            placeholder="(503) 555-0100"
-            className={inputClass}
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className={labelClass}>Industry *</label>
-
-        <select name="industry" required defaultValue="" className={inputClass}>
-          <option value="" disabled>
-            Select your industry...
-          </option>
-
-          {industries.map((ind) => (
-            <option key={ind}>{ind}</option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label className={labelClass}>Additional Notes</label>
-
-        <textarea
-          name="message"
-          rows={4}
-          className={`${inputClass} resize-none`}
-        />
-      </div>
-
-      <div>
-        <label className={labelClass}>Resume / CV *</label>
-
-        <UploadZone
-          file={file}
-          onFileChange={handleFileChange}
-          error={!!fileError}
-        />
-
-        {fileError && (
-          <p className="flex items-center gap-1.5 mt-2 text-xs text-red-600">
-            <AlertCircle className="w-3.5 h-3.5" />
-            {fileError}
-          </p>
-        )}
-      </div>
-
-      <div className="h-px bg-forest-100" />
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="btn-primary w-full justify-center text-sm py-3.5"
+      <form
+        action="https://formsubmit.co/info@evergreenresources.org"
+        method="POST"
+        encType="multipart/form-data"
+        target="resume-submit-frame"
+        onSubmit={handleSubmit}
+        className="space-y-5"
       >
-        {loading ? 'Submitting...' : 'Submit Resume'}
-      </button>
+        {/* FormSubmit configuration */}
+        <input type="hidden" name="_subject" value="New Resume Submission" />
+        <input type="hidden" name="_captcha" value="false" />
+        {/*
+          _next tells FormSubmit where to redirect inside the iframe after success.
+          Pointing to about:blank keeps it invisible and avoids cross-origin issues.
+        */}
+        <input type="hidden" name="_next" value="about:blank" />
 
-      <p className="font-body text-xs text-center text-forest-400">
-        Your information is kept confidential and used only for recruitment.
-      </p>
-    </form>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className={labelClass}>First Name *</label>
+            <input
+              type="text"
+              name="firstName"
+              required
+              placeholder="Jane"
+              className={inputClass}
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Last Name *</label>
+            <input
+              type="text"
+              name="lastName"
+              required
+              placeholder="Smith"
+              className={inputClass}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className={labelClass}>Email Address *</label>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="jane@example.com"
+              className={inputClass}
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Phone Number</label>
+            <input
+              type="tel"
+              name="phone"
+              placeholder="(503) 555-0100"
+              className={inputClass}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className={labelClass}>Industry *</label>
+
+          <select name="industry" required defaultValue="" className={inputClass}>
+            <option value="" disabled>
+              Select your industry...
+            </option>
+
+            {industries.map((ind) => (
+              <option key={ind}>{ind}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className={labelClass}>Additional Notes</label>
+
+          <textarea
+            name="message"
+            rows={4}
+            className={`${inputClass} resize-none`}
+          />
+        </div>
+
+        <div>
+          <label className={labelClass}>Resume / CV *</label>
+
+          <UploadZone
+            file={file}
+            onFileChange={handleFileChange}
+            error={!!fileError}
+          />
+
+          {fileError && (
+            <p className="flex items-center gap-1.5 mt-2 text-xs text-red-600">
+              <AlertCircle className="w-3.5 h-3.5" />
+              {fileError}
+            </p>
+          )}
+        </div>
+
+        <div className="h-px bg-forest-100" />
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-primary w-full justify-center text-sm py-3.5"
+        >
+          {loading ? 'Submitting...' : 'Submit Resume'}
+        </button>
+
+        <p className="font-body text-xs text-center text-forest-400">
+          Your information is kept confidential and used only for recruitment.
+        </p>
+      </form>
+    </>
   )
 }
