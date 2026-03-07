@@ -1,5 +1,17 @@
+/**
+ * ResumeSubmissionForm.jsx
+ *
+ * Required .env variable (Vite):
+ *   VITE_API_URL=https://your-backend.onrender.com
+ *
+ * Calls POST /api/resume on your Node.js backend.
+ * Everything else (UI, layout, validation, upload zone) is unchanged.
+ */
+
 import { useState, useRef, useCallback } from 'react'
 import { CheckCircle2, Upload, FileText, X, AlertCircle } from 'lucide-react'
+
+const API_URL = import.meta.env.VITE_API_URL
 
 const inputClass = [
   'w-full px-4 py-3 text-sm font-body',
@@ -12,7 +24,7 @@ const inputClass = [
 const labelClass =
   'block font-body text-xs font-medium text-forest-700 mb-1.5 tracking-wide'
 
-const industries = [
+const INDUSTRIES = [
   'Technology',
   'Finance',
   'Healthcare',
@@ -24,6 +36,8 @@ const industries = [
   'Administration',
   'Other',
 ]
+
+// ---------------------------------------------------------------------------
 
 function SuccessMessage() {
   return (
@@ -46,14 +60,14 @@ function SuccessMessage() {
       <div className="mt-6 px-5 py-3 bg-forest-50 border border-forest-100 rounded-sm">
         <p className="font-body text-xs text-forest-500">
           Expected response time:{' '}
-          <span className="font-semibold text-forest-700">
-            3 to 5 business days
-          </span>
+          <span className="font-semibold text-forest-700">3 to 5 business days</span>
         </p>
       </div>
     </div>
   )
 }
+
+// ---------------------------------------------------------------------------
 
 function UploadZone({ file, onFileChange, error }) {
   const inputRef = useRef(null)
@@ -73,7 +87,7 @@ function UploadZone({ file, onFileChange, error }) {
       const dropped = e.dataTransfer.files[0]
       if (dropped) onFileChange(dropped)
     },
-    [onFileChange]
+    [onFileChange],
   )
 
   const handleInputChange = (e) => {
@@ -92,9 +106,7 @@ function UploadZone({ file, onFileChange, error }) {
       <input
         ref={inputRef}
         type="file"
-        name="resume"
         onChange={handleInputChange}
-        required
         className="sr-only"
         accept=".pdf,.doc,.docx"
       />
@@ -149,13 +161,15 @@ function UploadZone({ file, onFileChange, error }) {
   )
 }
 
+// ---------------------------------------------------------------------------
+
 export default function ResumeSubmissionForm() {
-  const [file, setFile] = useState(null)
+  const formRef = useRef(null)
+
+  const [file,      setFile]      = useState(null)
   const [fileError, setFileError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading,   setLoading]   = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  // Tracks whether the iframe load is from an actual submission (not initial mount)
-  const isPendingSubmission = useRef(false)
 
   function handleFileChange(selectedFile) {
     setFileError('')
@@ -174,164 +188,138 @@ export default function ResumeSubmissionForm() {
     setFile(selectedFile)
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
+    e.preventDefault()
+
     if (!file) {
-      e.preventDefault()
       setFileError('Please attach your resume before submitting.')
       return
     }
 
-    // Let the form submit naturally (multipart POST to iframe).
-    // This is the only reliable way to send file attachments via FormSubmit.
-    isPendingSubmission.current = true
     setLoading(true)
-  }
+    setFileError('')
 
-  // Fires when the hidden iframe finishes loading — i.e. FormSubmit responded.
-  function handleIframeLoad() {
-    if (!isPendingSubmission.current) return
-    isPendingSubmission.current = false
-    setLoading(false)
-    setSubmitted(true)
+    try {
+      // Build multipart payload — FormData handles the file correctly
+      const formData = new FormData(formRef.current)
+      formData.set('resume', file, file.name)
+
+      const response = await fetch(`${API_URL}/api/resume`, {
+        method: 'POST',
+        body:   formData,
+        // Do NOT set Content-Type — the browser sets it with the boundary
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setSubmitted(true)
+      } else {
+        setFileError(data.message || 'Submission failed. Please try again.')
+      }
+    } catch {
+      setFileError('Network error. Please check your connection and try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (submitted) return <SuccessMessage />
 
   return (
-    <>
-      {/*
-        Hidden iframe that receives the FormSubmit redirect response.
-        The form targets it by name, keeping the user on the same page
-        while the real multipart/form-data POST (with the PDF attached)
-        goes through. This is why the AJAX endpoint was wrong — it strips files.
-      */}
-      <iframe
-        name="resume-submit-frame"
-        style={{ display: 'none' }}
-        onLoad={handleIframeLoad}
-        title="Form submission target"
-        aria-hidden="true"
-      />
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-5" noValidate>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className={labelClass}>First Name *</label>
+          <input
+            type="text"
+            name="firstName"
+            required
+            placeholder="Jane"
+            className={inputClass}
+          />
+        </div>
 
-      <form
-        action="https://formsubmit.co/info@evergreenresources.org"
-        method="POST"
-        encType="multipart/form-data"
-        target="resume-submit-frame"
-        onSubmit={handleSubmit}
-        className="space-y-5"
+        <div>
+          <label className={labelClass}>Last Name *</label>
+          <input
+            type="text"
+            name="lastName"
+            required
+            placeholder="Smith"
+            className={inputClass}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className={labelClass}>Email Address *</label>
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="jane@example.com"
+            className={inputClass}
+          />
+        </div>
+
+        <div>
+          <label className={labelClass}>Phone Number</label>
+          <input
+            type="tel"
+            name="phone"
+            placeholder="(503) 555-0100"
+            className={inputClass}
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className={labelClass}>Industry *</label>
+        <select name="industry" required defaultValue="" className={inputClass}>
+          <option value="" disabled>Select your industry...</option>
+          {INDUSTRIES.map((ind) => (
+            <option key={ind}>{ind}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className={labelClass}>Additional Notes</label>
+        <textarea
+          name="message"
+          rows={4}
+          className={`${inputClass} resize-none`}
+        />
+      </div>
+
+      <div>
+        <label className={labelClass}>Resume / CV *</label>
+
+        <UploadZone file={file} onFileChange={handleFileChange} error={!!fileError} />
+
+        {fileError && (
+          <p className="flex items-center gap-1.5 mt-2 text-xs text-red-600">
+            <AlertCircle className="w-3.5 h-3.5" />
+            {fileError}
+          </p>
+        )}
+      </div>
+
+      <div className="h-px bg-forest-100" />
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="btn-primary w-full justify-center text-sm py-3.5 disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        {/* FormSubmit configuration */}
-        <input type="hidden" name="_subject" value="New Resume Submission" />
-        <input type="hidden" name="_captcha" value="false" />
-        {/*
-          _next tells FormSubmit where to redirect inside the iframe after success.
-          Pointing to about:blank keeps it invisible and avoids cross-origin issues.
-        */}
-        <input type="hidden" name="_next" value="about:blank" />
+        {loading ? 'Submitting...' : 'Submit Resume'}
+      </button>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelClass}>First Name *</label>
-            <input
-              type="text"
-              name="firstName"
-              required
-              placeholder="Jane"
-              className={inputClass}
-            />
-          </div>
-
-          <div>
-            <label className={labelClass}>Last Name *</label>
-            <input
-              type="text"
-              name="lastName"
-              required
-              placeholder="Smith"
-              className={inputClass}
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelClass}>Email Address *</label>
-            <input
-              type="email"
-              name="email"
-              required
-              placeholder="jane@example.com"
-              className={inputClass}
-            />
-          </div>
-
-          <div>
-            <label className={labelClass}>Phone Number</label>
-            <input
-              type="tel"
-              name="phone"
-              placeholder="(503) 555-0100"
-              className={inputClass}
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className={labelClass}>Industry *</label>
-
-          <select name="industry" required defaultValue="" className={inputClass}>
-            <option value="" disabled>
-              Select your industry...
-            </option>
-
-            {industries.map((ind) => (
-              <option key={ind}>{ind}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className={labelClass}>Additional Notes</label>
-
-          <textarea
-            name="message"
-            rows={4}
-            className={`${inputClass} resize-none`}
-          />
-        </div>
-
-        <div>
-          <label className={labelClass}>Resume / CV *</label>
-
-          <UploadZone
-            file={file}
-            onFileChange={handleFileChange}
-            error={!!fileError}
-          />
-
-          {fileError && (
-            <p className="flex items-center gap-1.5 mt-2 text-xs text-red-600">
-              <AlertCircle className="w-3.5 h-3.5" />
-              {fileError}
-            </p>
-          )}
-        </div>
-
-        <div className="h-px bg-forest-100" />
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-primary w-full justify-center text-sm py-3.5"
-        >
-          {loading ? 'Submitting...' : 'Submit Resume'}
-        </button>
-
-        <p className="font-body text-xs text-center text-forest-400">
-          Your information is kept confidential and used only for recruitment.
-        </p>
-      </form>
-    </>
+      <p className="font-body text-xs text-center text-forest-400">
+        Your information is kept confidential and used only for recruitment.
+      </p>
+    </form>
   )
 }

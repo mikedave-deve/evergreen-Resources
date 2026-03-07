@@ -1,6 +1,20 @@
-import { useState } from 'react'
+/**
+ * ContactPage.jsx
+ *
+ * Required .env variable (Vite):
+ *   VITE_API_URL=https://your-backend.onrender.com
+ *
+ * Calls POST /api/contact on your Node.js backend.
+ * Everything else (UI, layout, sidebar, offices) is unchanged.
+ */
+
+import { useState }                                 from 'react'
 import { Mail, Phone, MapPin, Clock, CheckCircle2 } from 'lucide-react'
-import { useScrollReveal } from '../hooks/useScrollReveal'
+import { useScrollReveal }                          from '../hooks/useScrollReveal'
+
+const API_URL = import.meta.env.VITE_API_URL
+
+// ---------------------------------------------------------------------------
 
 function PageHeader() {
   return (
@@ -20,10 +34,12 @@ function PageHeader() {
   )
 }
 
+// ---------------------------------------------------------------------------
+
 function ContactForm() {
-  const [submitted,    setSubmitted]    = useState(false)
-  const [loading,      setLoading]      = useState(false)
-  const [submitError,  setSubmitError]  = useState('')
+  const [submitted,   setSubmitted]   = useState(false)
+  const [loading,     setLoading]     = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   const inputClass = [
     'w-full px-4 py-3 text-sm font-body',
@@ -40,21 +56,29 @@ function ContactForm() {
     setSubmitError('')
     setLoading(true)
 
+    const form = e.target
+
     try {
-      const response = await fetch('https://formsubmit.co/ajax/info@evergreenresources.org', {
-        method: 'POST',
-        body:   new FormData(e.target),
+      const response = await fetch(`${API_URL}/api/contact`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName:   form.firstName.value.trim(),
+          lastName:    form.lastName.value.trim(),
+          email:       form.email.value.trim(),
+          phone:       form.phone.value.trim(),
+          inquiryType: form.inquiryType.value,
+          company:     form.company.value.trim(),
+          message:     form.message.value.trim(),
+        }),
       })
 
       const data = await response.json()
 
-      if (response.ok && data.success === 'true') {
+      if (response.ok && data.success) {
         setSubmitted(true)
       } else {
-        setSubmitError(
-          data?.message ||
-          'Something went wrong. Please try again or email us directly.'
-        )
+        setSubmitError(data.message || 'Something went wrong. Please try again.')
       }
     } catch {
       setSubmitError('Network error. Please check your connection and try again.')
@@ -69,7 +93,9 @@ function ContactForm() {
         <div className="w-16 h-16 bg-forest-100 rounded-full flex items-center justify-center mb-5">
           <CheckCircle2 className="w-8 h-8 text-forest-600" />
         </div>
-        <h3 className="font-display text-2xl font-bold text-forest-900 mb-3">Message Received</h3>
+        <h3 className="font-display text-2xl font-bold text-forest-900 mb-3">
+          Message Received
+        </h3>
         <p className="font-body text-sm text-forest-700/70 max-w-sm leading-relaxed">
           Thank you for reaching out. A member of our team will respond within one business day.
         </p>
@@ -79,10 +105,6 @@ function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-      {/* FormSubmit configuration */}
-      <input type="hidden" name="_subject" value="New Contact Form Message" />
-      <input type="hidden" name="_captcha" value="false" />
-
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="firstName" className={labelClass}>First Name *</label>
@@ -142,9 +164,11 @@ function ContactForm() {
         </div>
       )}
 
-      <button type="submit"
-              disabled={loading}
-              className="btn-primary w-full justify-center text-sm py-3.5 disabled:opacity-60 disabled:cursor-not-allowed">
+      <button
+        type="submit"
+        disabled={loading}
+        className="btn-primary w-full justify-center text-sm py-3.5 disabled:opacity-60 disabled:cursor-not-allowed"
+      >
         {loading ? (
           <>
             <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
@@ -163,13 +187,17 @@ function ContactForm() {
   )
 }
 
+// ---------------------------------------------------------------------------
+
 function ContactSection() {
   const ref = useScrollReveal('.reveal')
+
   const offices = [
-    { city: 'Portland', state: 'OR', address: '1234 NW Glisan St, Suite 400', primary: true },
-    { city: 'Seattle',  state: 'WA', address: '800 Fifth Ave, Suite 1010',   },
-    { city: 'San Francisco', state: 'CA', address: '535 Mission St, Suite 1450',  },
+    { city: 'Portland',      state: 'OR', address: '1234 NW Glisan St, Suite 400', primary: true },
+    { city: 'Seattle',       state: 'WA', address: '800 Fifth Ave, Suite 1010'                   },
+    { city: 'San Francisco', state: 'CA', address: '535 Mission St, Suite 1450'                  },
   ]
+
   return (
     <section className="section-wrapper bg-white" ref={ref}>
       <div className="container-base">
@@ -188,12 +216,14 @@ function ContactSection() {
             <div>
               <p className="section-label mb-4">Our Offices</p>
               {offices.map((office) => (
-                <div key={office.city}
-                     className={`p-5 rounded-sm border mb-4 ${
-                       office.primary
-                         ? 'border-forest-200 bg-forest-50'
-                         : 'border-forest-100 bg-white'
-                     }`}>
+                <div
+                  key={office.city}
+                  className={`p-5 rounded-sm border mb-4 ${
+                    office.primary
+                      ? 'border-forest-200 bg-forest-50'
+                      : 'border-forest-100 bg-white'
+                  }`}
+                >
                   <div className="flex items-center gap-2 mb-2">
                     <MapPin className="w-4 h-4 text-forest-500" />
                     <span className="font-body text-sm font-semibold text-forest-900">
@@ -206,7 +236,10 @@ function ContactSection() {
                     </span>
                   </div>
                   <p className="font-body text-xs text-forest-700/70 mb-1 ml-6">{office.address}</p>
-                  <a href={`tel:${office.phone}`} className="font-body text-xs text-forest-600 hover:text-forest-800 transition-colors ml-6 flex items-center gap-1.5">
+                  <a
+                    href={`tel:${office.phone}`}
+                    className="font-body text-xs text-forest-600 hover:text-forest-800 transition-colors ml-6 flex items-center gap-1.5"
+                  >
                     <Phone className="w-3 h-3" /> {office.phone}
                   </a>
                 </div>
@@ -229,8 +262,10 @@ function ContactSection() {
                 <Mail className="w-4 h-4 text-forest-500" />
                 <span className="font-body text-sm font-semibold text-forest-900">Direct Email</span>
               </div>
-              <a href="mailto:hello@evergreenresources.com"
-                 className="font-body text-xs text-forest-600 hover:text-forest-800 transition-colors">
+              <a
+                href="mailto:info@evergreenresources.org"
+                className="font-body text-xs text-forest-600 hover:text-forest-800 transition-colors"
+              >
                 info@evergreenresources.org
               </a>
             </div>
@@ -248,6 +283,8 @@ function ContactSection() {
     </section>
   )
 }
+
+// ---------------------------------------------------------------------------
 
 export default function ContactPage() {
   return (
