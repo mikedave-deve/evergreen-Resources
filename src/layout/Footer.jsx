@@ -6,6 +6,7 @@ const footerLinks = {
     { to: '/about',      label: 'About Us'       },
     { to: '/services',   label: 'Our Services'   },
     { to: '/industries', label: 'Industries'     },
+    { to: '/staff',      label: 'Meet Our Team'  },
     { to: '/contact',    label: 'Contact'        },
   ],
   'For Employers': [
@@ -14,9 +15,10 @@ const footerLinks = {
     { to: '/contact',    label: 'Get a Quote'    },
   ],
   'For Candidates': [
-    { to: '/jobs',       label: 'Job Board'      },
-    { to: '/candidates', label: 'Career Resources' },
-    { to: '/candidates', label: 'Resume Tips'   },
+    { to: '/jobs',           label: 'Job Board'      },
+    { to: '/apply',          label: 'Apply Now'      },
+    { to: '/submit-resume',  label: 'Submit Resume'  },
+    { to: '/candidates',     label: 'Career Resources' },
   ],
 }
 

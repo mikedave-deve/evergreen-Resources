@@ -1,13 +1,3 @@
-/**
- * ResumeSubmissionForm.jsx
- *
- * Required .env variable (Vite):
- *   VITE_API_URL=https://your-backend.onrender.com
- *
- * Calls POST /api/resume on your Node.js backend.
- * Everything else (UI, layout, validation, upload zone) is unchanged.
- */
-
 import { useState, useRef, useCallback } from 'react'
 import { CheckCircle2, Upload, FileText, X, AlertCircle } from 'lucide-react'
 

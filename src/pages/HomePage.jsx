@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ArrowRight, ChevronRight } from 'lucide-react'
+import { ArrowRight, ChevronRight, Award, Star } from 'lucide-react'
 import { services, industries, testimonials, stats } from '../data'
 import { useScrollReveal, useCounterAnimation } from '../hooks/useScrollReveal'
 import { Card, CardContent } from '../components/ui/Card'
@@ -255,6 +255,113 @@ function TestimonialsSection() {
   )
 }
 
+// ─── Award-Winning Employee Recognition ───────────────────────────────────
+function EmployeeRecognitionSection() {
+  const ref    = useScrollReveal('.reveal')
+  const barRef = useRef(null)
+
+  useEffect(() => {
+    if (!barRef.current) return
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        barRef.current,
+        { scaleX: 0, transformOrigin: 'left center' },
+        {
+          scaleX: 1, duration: 1.4, ease: 'power3.out',
+          scrollTrigger: { trigger: barRef.current, start: 'top 85%', toggleActions: 'play none none none' },
+        }
+      )
+    })
+    return () => ctx.revert()
+  }, [])
+
+  const highlights = [
+    { icon: <Award className="w-5 h-5 text-yellow-500" />,  label: 'Recognition Awards',  value: '3x Annual' },
+    { icon: <Star  className="w-5 h-5 text-forest-400" />,  label: 'Performance Bonuses', value: 'Monthly'    },
+    { icon: <ChevronRight className="w-5 h-5 text-forest-500" />, label: 'Growth Pathways', value: 'Structured' },
+  ]
+
+  return (
+    <section className="section-wrapper bg-cream-50 relative overflow-hidden" ref={ref}>
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23193919' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}
+      />
+      <div className="relative container-base">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <div>
+            <div ref={barRef} className="w-12 h-1 bg-forest-500 mb-6 rounded-full" />
+            <div className="reveal inline-flex items-center gap-2 bg-forest-100 border border-forest-200
+                            rounded-full px-3 py-1 mb-5">
+              <Award className="w-3.5 h-3.5 text-yellow-500" />
+              <span className="font-body text-xs font-semibold text-forest-700 tracking-wide">
+                Award-Winning Program
+              </span>
+            </div>
+            <h2 className="reveal section-title mb-5 leading-tight">
+              Award-Winning Employee{' '}
+              <span className="text-forest-600">Recognition Program</span>
+            </h2>
+            <p className="reveal font-body text-base text-forest-700/70 leading-relaxed mb-6 max-w-lg">
+              We proudly recognize and reward outstanding team members through our award-winning
+              employee recognition program. This initiative is designed to identify individuals
+              with exceptional potential and performance, providing them with opportunities for
+              growth, advancement, and exclusive incentives.
+            </p>
+            <p className="reveal font-body text-sm text-forest-700/60 leading-relaxed mb-8 max-w-lg">
+              From monthly spotlights to annual excellence awards, every contribution is seen,
+              valued, and celebrated — because the best organisations are built by the best people.
+            </p>
+            <div className="reveal">
+              <Link to="/staff" className="btn-primary">
+                Meet Our Team <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            {highlights.map((h, i) => (
+              <div
+                key={i}
+                className="reveal flex items-center gap-5 p-5 bg-white border border-forest-100
+                           rounded-sm shadow-sm hover:shadow-md hover:border-forest-200 transition-all duration-300 group"
+              >
+                <div className="w-10 h-10 bg-forest-50 border border-forest-100 rounded-sm
+                                flex items-center justify-center shrink-0 group-hover:bg-forest-100 transition-colors">
+                  {h.icon}
+                </div>
+                <div className="flex-1">
+                  <p className="font-body text-xs text-forest-500 uppercase tracking-widest mb-0.5">{h.label}</p>
+                  <p className="font-display text-lg font-semibold text-forest-900">{h.value}</p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-forest-300 group-hover:text-forest-500 transition-colors" />
+              </div>
+            ))}
+            <div className="reveal p-6 bg-forest-900 rounded-sm">
+              <div className="text-forest-400 font-display text-4xl leading-none mb-2 select-none">"</div>
+              <p className="font-body text-sm text-cream-200/80 leading-relaxed italic mb-4">
+                Our recognition program has transformed team culture. People don't just show up —
+                they bring their best every single day.
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-forest-600 flex items-center justify-center shrink-0">
+                  <span className="font-body text-xs font-bold text-white">MC</span>
+                </div>
+                <div>
+                  <p className="font-body text-xs font-semibold text-white">Margaret Collins</p>
+                  <p className="font-body text-xs text-forest-400">CEO &amp; Founder</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ─── CTA Banner ────────────────────────────────────────────────────────────
 function CTASection() {
   const ref = useScrollReveal('.reveal')
@@ -300,6 +407,7 @@ export default function HomePage() {
       <StatsSection />
       <IndustriesPreview />
       <TestimonialsSection />
+      <EmployeeRecognitionSection />
       <CTASection />
     </>
   )

@@ -16,6 +16,14 @@ const navLinks = [
     ],
   },
   { label: 'Jobs', href: '/jobs' },
+  {
+    label: 'Work With Us',
+    children: [
+      { label: 'Apply Now', href: '/apply' },
+      { label: 'Submit Resume', href: '/submit-resume' },
+    ],
+  },
+  { label: 'Our Team', href: '/staff' },
   { label: 'Contact', href: '/contact' },
 ]
 

@@ -1,13 +1,3 @@
-/**
- * ContactPage.jsx
- *
- * Required .env variable (Vite):
- *   VITE_API_URL=https://your-backend.onrender.com
- *
- * Calls POST /api/contact on your Node.js backend.
- * Everything else (UI, layout, sidebar, offices) is unchanged.
- */
-
 import { useState }                                 from 'react'
 import { Mail, Phone, MapPin, Clock, CheckCircle2 } from 'lucide-react'
 import { useScrollReveal }                          from '../hooks/useScrollReveal'

@@ -30,7 +30,7 @@
            active:scale-95 cursor-pointer text-sm;
   }
   .card-base {
-    @apply bg-white rounded-sm border border-forest-100 shadow-sm
+    @apply bg-white rounded-sm border-forest-100 shadow-sm
            transition-all duration-300 hover:shadow-md hover:border-forest-200;
   }
   .section-label { @apply text-xs font-semibold tracking-widest uppercase text-forest-500; }

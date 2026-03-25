@@ -16,9 +16,11 @@ const navLinks = [
       { to: '/candidates',     label: 'For Candidates' },
       { to: '/jobs',           label: 'Job Board'      },
       { to: '/submit-resume',  label: 'Submit Resume'  },
+      { to: '/apply',          label: 'Apply Now'      },
     ],
   },
-  { to: '/contact', label: 'Contact' },
+  { to: '/staff',   label: 'Our Team' },
+  { to: '/contact', label: 'Contact'  },
 ]
 
 export default function Navbar() {
