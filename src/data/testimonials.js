@@ -1,3 +1,7 @@
+import 
+
+
+
 export const testimonials = [
   {
     id: 1,
@@ -6,6 +10,7 @@ export const testimonials = [
     company: 'NorthBridge Capital',
     quote: 'Evergreen delivered three exceptional senior hires within six weeks. Their ability to understand our culture and match it to candidate profiles is genuinely unmatched in the industry.',
     rating: 5,
+    image
   },
   {
     id: 2,
