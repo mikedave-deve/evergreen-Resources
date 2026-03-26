@@ -347,11 +347,11 @@ function EmployeeRecognitionSection() {
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-forest-600 flex items-center justify-center shrink-0">
-                  <span className="font-body text-xs font-bold text-white">MC</span>
+                  <span className="font-body text-xs font-bold text-white">JW</span>
                 </div>
                 <div>
-                  <p className="font-body text-xs font-semibold text-white">Margaret Collins</p>
-                  <p className="font-body text-xs text-forest-400">CEO &amp; Founder</p>
+                  <p className="font-body text-xs font-semibold text-white">JAMES WHITFIELD</p>
+                  <p className="font-body text-xs text-forest-400">CEO &amp; FOUNDER</p>
                 </div>
               </div>
             </div>
