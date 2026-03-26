@@ -6,6 +6,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// ── Backend base URL — set VITE_API_URL in your .env (e.g. https://your-backend.vercel.app)
+const API_BASE = import.meta.env.VITE_API_URL ?? ''
+
 // ─── Page Header ──────────────────────────────────────────────────────────
 function PageHeader() {
   const headerRef = useRef(null)
@@ -82,16 +85,39 @@ function ApplicationForm() {
 
   const labelClass = 'block font-body text-xs font-medium text-forest-700 mb-1.5 tracking-wide uppercase'
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     setSubmitError('')
     setLoading(true)
 
-    // Simulate async submission (replace with real endpoint)
-    setTimeout(() => {
-      setLoading(false)
+    // Collect all field values from the form
+    const form = e.currentTarget
+    const data = Object.fromEntries(new FormData(form).entries())
+
+    try {
+      const res = await fetch(`${API_BASE}/api/apply`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(data),
+      })
+
+      const json = await res.json()
+
+      if (!res.ok || !json.success) {
+        // Surface backend validation errors or generic error message
+        const msg = Array.isArray(json.errors)
+          ? json.errors.join(' ')
+          : (json.message || 'Something went wrong. Please try again.')
+        setSubmitError(msg)
+        return
+      }
+
       setSubmitted(true)
-    }, 1200)
+    } catch {
+      setSubmitError('Unable to reach the server. Please check your connection and try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (submitted) {
