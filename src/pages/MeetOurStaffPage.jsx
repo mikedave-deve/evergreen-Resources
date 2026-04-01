@@ -208,7 +208,7 @@ function EmployeeOfTheMonth() {
                   "Outstanding performance, consistent excellence, and an unwavering commitment to
                   the team. This recognition is well deserved."
                 </blockquote>
-                <p className="font-body text-xs text-forest-400 mt-3">— Margaret Collins, CEO & Founder</p>
+                <p className="font-body text-xs text-forest-400 mt-3">— James Whitfield, CEO & Founder</p>
               </div>
             </div>
           </div>
