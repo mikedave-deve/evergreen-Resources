@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
+// Register once at module level — safe to call multiple times but wasteful
 gsap.registerPlugin(ScrollTrigger)
 
 /**
@@ -13,36 +14,38 @@ gsap.registerPlugin(ScrollTrigger)
  */
 export function useScrollReveal(selector = '.reveal', options = {}) {
   const containerRef = useRef(null)
+  // Stable ref for options so the effect only runs once per mount
+  const optionsRef = useRef(options)
 
   useEffect(() => {
     if (!containerRef.current) return
 
+    const opts = optionsRef.current
     const elements = containerRef.current.querySelectorAll(selector)
     if (!elements.length) return
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
         elements,
-        { opacity: 0, y: 50 },
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
-          duration: options.duration || 0.8,
-          stagger:  options.stagger  || 0.15,
-          ease:     options.ease     || 'power2.out',
+          duration: opts.duration || 0.7,
+          stagger:  opts.stagger  || 0.1,
+          ease:     opts.ease     || 'power2.out',
           scrollTrigger: {
             trigger:  containerRef.current,
-            start:    options.start  || 'top 82%',
-            end:      options.end    || 'bottom 20%',
+            start:    opts.start  || 'top 85%',
             toggleActions: 'play none none none',
-            ...options.scrollTrigger,
+            ...opts.scrollTrigger,
           },
         }
       )
     }, containerRef)
 
     return () => ctx.revert()
-  }, [selector, options.duration, options.stagger])
+  }, [selector]) // selector is stable; options stabilised via ref
 
   return containerRef
 }

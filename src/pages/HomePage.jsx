@@ -3,12 +3,11 @@ import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowRight, ChevronRight, Award, Star } from 'lucide-react'
+
 import { services, industries, testimonials, stats } from '../data'
 import { useScrollReveal, useCounterAnimation } from '../hooks/useScrollReveal'
 import { Card, CardContent } from '../components/ui/Card'
 import Badge from '../components/ui/Badge'
-
-gsap.registerPlugin(ScrollTrigger)
 
 // ─── Hero Section ──────────────────────────────────────────────────────────
 function Hero() {
@@ -20,7 +19,7 @@ function Hero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.2 })
+      const tl = gsap.timeline({ delay: 0.05 })
       tl.fromTo(badgeRef.current,
         { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }
